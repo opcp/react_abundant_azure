@@ -1,0 +1,55 @@
+.Home_header {
+  // max-width: $all;
+  margin: 0 auto;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 20%;
+  padding-top: 50px;
+  z-index: 99;
+  display: flex;
+  .nav_row {
+    width: 100%;
+    display: flex;
+    margin: 0 auto;
+    .nav_col {
+      padding: 0;
+    }
+    .navbar_ul {
+      height: auto;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      .link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 0;
+        text-decoration: none;
+        color: $white;
+        transition: 0.7s;
+        font-weight: 700;
+        text-shadow: $gray 0.1em 0.1em 0.2em;
+        &:hover {
+          color: $black;
+        }
+      }
+      .book_btn {
+        button {
+          background: $gray;
+          border: none;
+          width: 112px;
+          height: 31px;
+          color: $white;
+          transition: 0.8s;
+          font-weight: 700;
+          outline: 0;
+          &:hover {
+            color: $gray;
+            background: $white;
+          }
+        }
+      }
+    }
+  }
+}

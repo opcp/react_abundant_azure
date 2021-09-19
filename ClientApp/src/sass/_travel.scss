@@ -1,0 +1,100 @@
+.wrap {
+  width: 100%;
+  margin: 0 auto;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  position: relative;
+  .travel_img {
+    position: fixed;
+    width: 100%;
+    img {
+      width: 100%;
+      height: 600px;
+    }
+  }
+  .travel_title {
+    max-width: $main;
+    width: 100%;
+    font-size: 65px;
+    color: $white;
+    position: absolute;
+    top: 30%;
+    left: 0%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    padding-right: 50px;
+    font-weight: 700;
+    text-shadow: $gray 0.1em 0.1em 0.2em;
+  }
+  .travel_body {
+    position: absolute;
+    top: 55%;
+    left: 20%;
+    background: $white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0;
+    .travel_row {
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 50px 0;
+      .travel_txt {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 0 0 100px;
+        .travel_aside {
+          font-size: 28px;
+          color: $gray;
+          text-align: center;
+        }
+        .travel_line {
+          margin-top: 30px;
+          width: 35px;
+          height: 3px;
+          background: rgba(255, 183, 48, 1);
+        }
+        .address {
+          width: 100px;
+          padding-top: 50px;
+        }
+      }
+      .travel_input {
+        display: flex;
+        flex-direction: column;
+        input {
+          padding: 5px 10px;
+          margin-top: 10px;
+        }
+        .submit {
+          color: $green;
+          text-decoration: none;
+          transition: 0.8s;
+          font-size: 15px;
+          padding-top: 35px;
+          &:hover {
+            color: $gray;
+          }
+        }
+        .message {
+          height: 150px;
+        }
+      }
+      .bot_img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        box-sizing: border-box;
+        img {
+          padding: 0 150px;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+.travel_body {
+  .contact_ask {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .contact_row {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 50px 0;
+    .contact_txt {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 0 0 100px;
+      .contact_aside {
+        font-size: 28px;
+        color: $gray;
+        text-align: center;
+      }
+      .contact_line {
+        margin-top: 30px;
+        width: 35px;
+        height: 3px;
+        background: rgba(255, 183, 48, 1);
+      }
+      .address {
+        width: 100px;
+        padding-top: 50px;
+      }
+    }
+    .contact_input {
+      display: flex;
+      flex-direction: column;
+      input {
+        padding: 5px 10px;
+        margin-top: 10px;
+      }
+      .submit {
+        align-self: flex-end;
+        color: $green;
+        text-decoration: none;
+        transition: 0.8s;
+        font-size: 15px;
+        padding-top: 5px;
+        &:hover {
+          color: $gray;
+        }
+      }
+      .message {
+        height: 150px;
+      }
+    }
+  }
+}
