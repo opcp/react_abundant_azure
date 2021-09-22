@@ -1,22 +1,14 @@
 import React from "react";
-import {
-  Modal,
-  Button,
-  Form,
-  Row,
-  Col,
-  CloseButton,
-  FormGroup,
-} from "react-bootstrap";
+import { Modal, Button, Form, Row, Col, FormGroup } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 function SignUp(props) {
-  // const [id, setId] = useState(null);
-  const memberName = useSelector((state) => state.memberName);
-  const memberEmail = useSelector((state) => state.memberEmail);
-  const memberSecondId = useSelector((state) => state.memberSecondId);
+  const { memberName, memberEmail, memberSecondId } = useSelector(
+    (state) => state
+  );
   const dispatch = useDispatch();
 
   const schema = yup.object().shape({
@@ -74,20 +66,19 @@ function SignUp(props) {
         validationSchema={schema}
         enableReinitialize
         onSubmit={async (values) => {
-          console.log(JSON.stringify(values));
-
-          let data = Object.assign(memberSecondId, values);
+          if (memberSecondId !== null) {
+            values = Object.assign(memberSecondId, values);
+          }
 
           await fetch("/api/member/MemberSignUp", {
             method: "Post",
-            body: JSON.stringify(data),
+            body: JSON.stringify(values),
             headers: new Headers({
               "Content-Type": "application/json",
             }),
           })
             .then((res) => res.json())
             .then((res) => {
-              console.log(res);
               dispatch({
                 type: "LOG_IN",
                 memberName: res.name,
@@ -96,18 +87,36 @@ function SignUp(props) {
               });
 
               dispatch({
-                type: "SIGN_UP_MODAL_HIDE",
+                type: "SIGN_UP_MODAL",
+                signUpModalStatus: false,
               });
+
+              dispatch({
+                type: "LOGIN_MODAL",
+                loginModalStatus: false,
+              });
+
+              if (memberSecondId) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Sign up success",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+              } else {
+                Swal.fire({
+                  icon: "success",
+                  title: "Sign up success",
+                  text: "Check your mail to complete member verification.",
+                  confirmButtonText: "Ok",
+                });
+              }
             })
             .catch((err) => console.log(err));
-          // setTimeout(() => {
-          //   alert(JSON.stringify(values, null, 2));
-          //   actions.setSubmitting(false);
-          // }, 1000);
         }}
         initialValues={initial}
       >
-        {({ handleSubmit, handleChange, values, touched, isValid, errors }) => (
+        {({ handleSubmit, handleChange, values, errors }) => (
           <Form noValidate onSubmit={handleSubmit} style={{ padding: "15px" }}>
             <Row className="mb-3">
               <Form.Group as={Col}>
@@ -199,14 +208,18 @@ function SignUp(props) {
                 feedback={errors.terms}
               />
             </Form.Group>
-            <FormGroup className="mb-3" style={{float:"right"}}>
-              <Button type="submit" style={{margin:"0 15px"}}>Sign Up</Button>
+            <FormGroup className="mb-3" style={{ float: "right" }}>
+              <Button type="submit" style={{ margin: "0 15px" }}>
+                Sign Up
+              </Button>
               <Button
                 type="button"
                 variant="secondary"
+                className="shadow-none"
                 onClick={() => {
                   dispatch({
-                    type: "SIGN_UP_MODAL_HIDE",
+                    type: "SIGN_UP_MODAL",
+                    signUpModalStatus: false,
                   });
                 }}
               >
