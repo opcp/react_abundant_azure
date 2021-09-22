@@ -1,103 +1,50 @@
 import React from "react";
-import {
-  Modal,
-  Button,
-  Form,
-  Row,
-  Col,
-  Container,
-  FormGroup,
-} from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-
+import { Modal, Button, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 function MemberOrder(props) {
-  const dispatch = useDispatch();
-
-  const { standardRoom, juniorSuite, superiorRoom } = useSelector(
-    (state) => state
-  );
-
-  let roomList = {
-    StandardRoom: standardRoom,
-    JuniorSuite: juniorSuite,
-    SuperiorRoom: superiorRoom,
-  };
-
-  let roomPrice = {
-    StandardRoom: 150,
-    JuniorSuite: 250,
-    SuperiorRoom: 350,
-  };
-
-  let totalPrice =
-    standardRoom * roomPrice["StandardRoom"] +
-    juniorSuite * roomPrice["JuniorSuite"] +
-    superiorRoom * roomPrice["SuperiorRoom"];
-
+  const { memberOrder } = useSelector((state) => state);
   return (
     <>
       <Modal
         {...props}
+        size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        size={"lg"}
       >
-        <Modal.Body className="order_check">
-          <Container className="order_list">
-            {Object.keys(roomList).map((i) => {
-              if (roomList[i] > 0) {
+        <Modal.Header>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Orders
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {memberOrder != null
+            ? memberOrder.map((i) => {
                 return (
-                  <Row key={i} className="order_row">
-                    <Col className="room_type" xs={6}>
-                      {roomList[i] + " x " + i}
-                    </Col>
-                    <Col className="room_price" xs={3}>{`$${
-                      roomList[i] * roomPrice[i]
-                    }`}</Col>
-                    <Col xs={3}>
-                      <Button
-                        onClick={() => {
-                          let obj = { type: "CHECK_ORDER_DELETE" };
-                          obj[i] = 0;
-                          dispatch(obj);
-                          
-                          if (standardRoom + juniorSuite + superiorRoom === 1) {
-                            dispatch({
-                              type: "MEMBER_ORDER_MODAL_HIDE",
-                            });
-                          }
-                        }}
-                        className="shadow-down room_delete"
-                        variant="danger"
-                      >
-                        x
-                      </Button>
-                    </Col>
+                  <Row key={i.orderString} className="mb-2 member_order">
+                    <div className="list">
+                      <h3>
+                        {new Date(i.checkInDate).toLocaleDateString()} -{" "}
+                        {new Date(i.checkOutDate).toLocaleDateString()}
+                      </h3>
+                      {/* <span>ORDER NUMBER:rwerwe34245-32441</span> */}
+                      <div className="room">
+                        {i.orderRoom.map((j) => {
+                          return (
+                            <p key={j.roomType}>
+                              {j.roomNumber} X {j.roomName}
+                            </p>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="price">${i.orderPrice}</div>
                   </Row>
                 );
-              }
-            })}
-          </Container>
-          <Container className="order_total_price">
-            <Row>Total</Row>
-            <Row className="total_price">${totalPrice}</Row>
-          </Container>
+              })
+            : "No orders now"}
         </Modal.Body>
-        <Modal.Footer style={{ paddingRight: "10%" }}>
-          <Button
-            className="shadow-down"
-            variant="primary"
-            onClick={props.onHide}
-          >
-            Reverse
-          </Button>
-          <Button
-            className="shadow-down"
-            variant="secondary"
-            onClick={props.onHide}
-          >
-            Cancel
-          </Button>
+        <Modal.Footer>
+          <Button   className="shadow-none" variant="secondary" onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
     </>

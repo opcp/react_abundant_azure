@@ -7,16 +7,19 @@ import OurApartment from "../OurApartment/OurApartment";
 import Contact from "../Contact/Contact";
 import Travel from "../Travel/Travel";
 import LogInModal from "../Member/LogInModal";
-import MemberOrder from "../Member/MemberOrder";
+import ReserveRoom from "../Member/ReserveRoom";
 import SignUp from "../Member/SignUp";
+import MemberOrder from "../Member/MemberOrder";
 
 function Header() {
   const {
     loginModalStatus,
-    signupModalStatus,
-    checkOrderModalStatus,
+    signUpModalStatus,
+    reserveOrderModalStatus,
+    memberOrderModalStatus,
     logStatus,
     logMethod,
+    memberId,
     memberName,
     memberCheck,
     eventAlert,
@@ -57,7 +60,6 @@ function Header() {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res);
           if (!res.error) {
             Line_ID_Token_Decode(res);
           }
@@ -91,15 +93,17 @@ function Header() {
           });
 
           dispatch({
-            type: "SIGN_UP_MODAL_SHOW",
+            type: "SIGN_UP_MODAL",
+            signUpModalStatus: true,
           });
         } else {
           dispatch({
             type: "LOG_IN",
-            memberName: res.name,
-            memberId: res.sub,
+            memberName: member_res.name,
+            memberId: member_res.id,
+            memberEnable: member_res.enable,
           });
-          eventAlert("Welecome back " + res.name);
+          eventAlert("Welecome back " + member_res.name);
         }
       })
       .catch((err) => console.log(err));
@@ -117,13 +121,13 @@ function Header() {
     });
 
     window.FB.getLoginStatus(async (response) => {
-      console.log(response);
       if (response.status === "connected") {
         let res = await memberCheck("facebook", response.authResponse.userID);
         dispatch({
           type: "LOG_IN",
           memberName: res.name,
           memberId: res.id,
+          memberEnable: res.enable,
           logMethod: "facebook",
         });
       }
@@ -141,6 +145,26 @@ function Header() {
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   })(document, "script", "facebook-jssdk");
+
+  // 會員訂單查詢
+  const fetchOrder = async (memberID) => {
+    return await fetch("/api/member/memberorder", {
+      method: "POST",
+      body: JSON.stringify(memberID),
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => {
+        if (res.status == 404) {
+          return null;
+        } else {
+          return res.json();
+        }
+      })
+      .then((res) => res)
+      .catch((error) => error);
+  };
 
   return (
     <>
@@ -167,7 +191,8 @@ function Header() {
                       <button
                         onClick={() => {
                           dispatch({
-                            type: "LOGIN_MODAL_SHOW",
+                            type: "LOGIN_MODAL",
+                            loginModalStatus: true,
                           });
                         }}
                       >
@@ -182,12 +207,29 @@ function Header() {
                     flip="true"
                     title={memberName ?? "Account"}
                   >
-                    <Dropdown.Item as="button">Orders</Dropdown.Item>
+                    <Dropdown.Item
+                      className="shadow-none"
+                      as="button"
+                      onClick={async () => {
+                        let res = await fetchOrder(memberId);
+                        dispatch({
+                          type: "FETCH_MEMBER_ORDER",
+                          memberOrder: res,
+                        });
+
+                        dispatch({
+                          type: "MEMBER_ORDER_MODAL",
+                          memberOrderModalStatus: true,
+                        });
+                      }}
+                    >
+                      Orders
+                    </Dropdown.Item>
                     <Dropdown.Item
                       as="button"
                       onClick={() => {
                         if (logMethod === "facebook") {
-                          window.FB.logout((res) => console.log(res));
+                          window.FB.logout((res) => res);
                         }
 
                         dispatch({
@@ -199,12 +241,6 @@ function Header() {
                     </Dropdown.Item>
                   </DropdownButton>
                 )}
-
-                {/* <Link className="link" to="/MemberOrder">
-                  <li>
-                    <button>MemberOrder</button>
-                  </li>
-                </Link> */}
               </ul>
             </Col>
           </Row>
@@ -214,26 +250,38 @@ function Header() {
           show={loginModalStatus}
           onHide={() => {
             dispatch({
-              type: "LOGIN_MODAL_HIDE",
+              type: "LOGIN_MODAL",
+              loginModalStatus: false,
             });
           }}
         />
         <SignUp
-          show={signupModalStatus}
-          //show={true}
+          show={signUpModalStatus}
           onHide={() => {
             dispatch({
-              type: "SIGN_UP_MODAL_HIDE",
+              type: "SIGN_UP_MODAL",
+              signUpModalStatus: false,
+            });
+          }}
+        />
+
+        <ReserveRoom
+          show={reserveOrderModalStatus}
+          onHide={() => {
+            dispatch({
+              type: "RESERVE_ORDER_MODAL",
+              reserveOrderModalStatus: false,
             });
           }}
         />
 
         <MemberOrder
-          show={checkOrderModalStatus}
-          //show={true}
+          show={memberOrderModalStatus}
+          // show={true}
           onHide={() => {
             dispatch({
-              type: "MEMBER_ORDER_MODAL_HIDE",
+              type: "MEMBER_ORDER_MODAL",
+              memberOrderModalStatus: false,
             });
           }}
         />
@@ -243,7 +291,7 @@ function Header() {
           <Route path="/OurApartment" component={OurApartment}></Route>
           <Route path="/travel" component={Travel}></Route>
           <Route path="/Contact" component={Contact}></Route>
-          <Route path="/MemberOrder" component={MemberOrder}></Route>
+          <Route path="/MemberOrder" component={ReserveRoom}></Route>
         </Switch>
       </Router>
     </>
