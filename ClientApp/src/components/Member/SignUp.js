@@ -253,6 +253,15 @@ function SignUp(props) {
                 variant="secondary"
                 className="shadow-none"
                 onClick={() => {
+
+                  dispatch({
+                    type: "INIT_SIGN_UP_DATA",
+                    memberName: null,
+                    memberEmail: null,
+                    memberSecondId: null,
+                    logMethod: null,
+                  });
+
                   dispatch({
                     type: "SIGN_UP_MODAL",
                     signUpModalStatus: false,

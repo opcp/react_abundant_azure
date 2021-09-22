@@ -38,7 +38,7 @@ namespace react_abundant_azure.Models
             {
                 using (MailMessage mail = new MailMessage())
                 {
-                    string link = "https://localhost:44374/verify?AccessToken=" + auth;
+                    string link = "https://abundant.azurewebsites.net/verify?AccessToken=" + auth;
                     mail.From = new MailAddress("abundantserviceiceland@gmail.com");
                     mail.To.Add(EmailSendTo);
                     mail.Subject = "Abundant Verify Mail";

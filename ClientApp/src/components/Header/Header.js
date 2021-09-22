@@ -123,13 +123,15 @@ function Header() {
     window.FB.getLoginStatus(async (response) => {
       if (response.status === "connected") {
         let res = await memberCheck("facebook", response.authResponse.userID);
-        dispatch({
-          type: "LOG_IN",
-          memberName: res.name,
-          memberId: res.id,
-          memberEnable: res.enable,
-          logMethod: "facebook",
-        });
+        if (res !== "first_login") {
+          dispatch({
+            type: "LOG_IN",
+            memberName: res.name,
+            memberId: res.id,
+            memberEnable: res.enable,
+            logMethod: "facebook",
+          });
+        }
       }
     });
   };

@@ -289,7 +289,7 @@ function OurApartment() {
                   className="shadow-none"
                   variant="secondary"
                   size="lg"
-                  style={{ alignSelf: "end", marginRight: "10%" }}
+                  style={{ alignSelf: "flex-end", marginRight: "10%" }}
                 >
                   Check order
                 </Button>

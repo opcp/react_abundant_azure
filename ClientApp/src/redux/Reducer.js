@@ -67,7 +67,6 @@ const initState = {
     })
       .then((res) => res.json())
       .then((res) => {
-        //5145460958814056
         if (res.state) {
           return res.state;
         } else {

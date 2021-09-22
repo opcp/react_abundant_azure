@@ -117,13 +117,14 @@ function ReserveRoom(props) {
           Swal.fire({
             icon: "success",
             title: "Your order has been completed",
+            width: "50vw",
             showConfirmButton: false,
             timer: 2500,
           });
-
+          
           dispatch({
-            type: "SIGN_UP_MODAL",
-            signUpModalStatus: false,
+            type: "RESERVE_ORDER_MODAL",
+            reserveOrderModalStatus: false,
           });
         }
       })
