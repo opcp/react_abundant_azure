@@ -1,24 +1,23 @@
 import Swal from "sweetalert2";
 
-const MAN_UP = "MAN_UP";
-const MAN_DOWN = "MAN_DOWN";
-const CHILD_UP = "CHILD_UP";
-const CHILD_DOWN = "CHILD_DOWN";
+const MAN = "MAN";
+const CHILD = "CHILD";
 const LOG_IN = "LOG_IN";
 const LOG_OUT = "LOG_OUT";
-const LOGIN_MODAL_SHOW = "LOGIN_MODAL_SHOW";
-const LOGIN_MODAL_HIDE = "LOGIN_MODAL_HIDE";
+const LOGIN_MODAL = "LOGIN_MODAL";
 const INIT_SIGN_UP_DATA = "INIT_SIGN_UP_DATA";
-const SIGN_UP_MODAL_SHOW = "SIGN_UP_MODAL_SHOW";
-const SIGN_UP_MODAL_HIDE = "SIGN_UP_MODAL_HIDE";
-const CHECK_ORDER_MODAL_SHOW = "CHECK_ORDER_MODAL_SHOW";
-const MEMBER_ORDER_MODAL_HIDE = "MEMBER_ORDER_MODAL_HIDE";
+const LOGIN_INPUT_CHANGE = "LOGIN_INPUT_CHANGE";
+const SIGN_UP_MODAL = "SIGN_UP_MODAL";
+const RESERVE_ORDER_MODAL = "RESERVE_ORDER_MODAL";
+const MEMBER_ORDER_MODAL = "MEMBER_ORDER_MODAL";
+const FETCH_MEMBER_ORDER = "FETCH_MEMBER_ORDER";
 const ROOM_ORDER_DATE = "ROOM_ORDER_DATE";
 const STANDARD_ROOM_ORDER_NUMBER = "STANDARD_ROOM_ORDER_NUMBER";
 const JUNIOR_SUITE_ORDER_NUMBER = "JUNIOR_SUITE_ORDER_NUMBER";
 const SUPERIOR_ROOM_ORDER_NUMBER = "SUPERIOR_ROOM_ORDER_NUMBER";
 const PER_ROOM_MAX = "PER_ROOM_MAX";
 const CHECK_ORDER_DELETE = "CHECK_ORDER_DELETE";
+const VERIFY_EMAIL_TIMER = "VERIFY_EMAIL_TIMER";
 
 const initState = {
   man: 1,
@@ -29,28 +28,34 @@ const initState = {
   standardRoomMax: null,
   juniorSuiteMax: null,
   superiorRoomMax: null,
+  account: null,
+  password: null,
   logStatus: false,
   logMethod: null,
   logInModalStatus: false,
   signUpModalStatus: false,
-  checkOrderModalStatus: false,
+  reserveOrderModalStatus: false,
+  memberOrderModalStatus: false,
   roomModalStatus: false,
   memberId: null,
   memberName: null,
   memberEmail: null,
+  memberEnable: null,
+  memberOrder: null,
   memberSecondId: null,
+  verifyEmailTimer:null,
   startDate: null,
   endDate: null,
-  memberCheck: async (useWeb, id) => {
+  memberCheck: async (useWeb, userData) => {
     const req = {};
-    if (useWeb == "facebook") {
-      req.FacebookId = id;
-    } else if (useWeb == "line") {
-      req.LineId = id;
-    } else {
-      req.ID = id;
+    if (useWeb === "facebook") {
+      req.FacebookId = userData;
+    } else if (useWeb === "line") {
+      req.LineId = userData;
+    } else if (useWeb === "web") {
+      req.Email = userData.account;
+      req.Password = userData.password;
     }
-
     return await fetch("/api/member/memberlogin", {
       method: "POST",
       body: JSON.stringify(req),
@@ -58,15 +63,18 @@ const initState = {
         "Content-Type": "application/json",
       }),
     })
+      .then((res) => res.json())
       .then((res) => {
-        if (res.status == 204) {
-          return "first_login";
+        //5145460958814056
+        if (res.state) {
+          return res.state;
         } else {
-          return res.json();
+          return res;
         }
       })
       .catch((error) => error);
   },
+  memberOrder: null,
   eventAlert: (successText) => {
     let timerInterval;
     Swal.fire({
@@ -86,28 +94,16 @@ const initState = {
 const reducer = (state = initState, action) => {
   switch (action.type) {
     // Search room
-    case MAN_UP:
+    case MAN:
       return {
         ...state,
-        man: state.man + 1,
+        man: action.man === "UP" ? state.man + 1 : state.man - 1,
       };
-    case MAN_DOWN:
+    case CHILD:
       return {
         ...state,
-        man: state.man - 1,
+        child: action.child === "UP" ? state.child + 1 : state.child - 1,
       };
-    case CHILD_UP:
-      return {
-        ...state,
-        child: state.child + 1,
-      };
-    case CHILD_DOWN:
-      return {
-        ...state,
-        child: state.child - 1,
-      };
-
-    // Room Order Data Control
     case ROOM_ORDER_DATE:
       return {
         ...state,
@@ -115,6 +111,7 @@ const reducer = (state = initState, action) => {
         endDate: action.endDate ?? state.endDate,
       };
 
+    // Room Order Data Control
     case STANDARD_ROOM_ORDER_NUMBER:
       return {
         ...state,
@@ -158,19 +155,25 @@ const reducer = (state = initState, action) => {
         superiorRoom: action.SuperiorRoom ?? state.superiorRoom,
       };
 
+    // Reserve Order Modal
+    case RESERVE_ORDER_MODAL:
+      return {
+        ...state,
+        reserveOrderModalStatus: action.reserveOrderModalStatus,
+      };
+
     // Member Order Modal
-    case CHECK_ORDER_MODAL_SHOW:
+    case FETCH_MEMBER_ORDER:
       return {
         ...state,
-        checkOrderModalStatus: true,
+        memberOrder: action.memberOrder,
       };
 
-    case MEMBER_ORDER_MODAL_HIDE:
+    case MEMBER_ORDER_MODAL:
       return {
         ...state,
-        checkOrderModalStatus: false,
+        memberOrderModalStatus: action.memberOrderModalStatus,
       };
-
     // SignUp Modal
     case INIT_SIGN_UP_DATA:
       return {
@@ -180,29 +183,25 @@ const reducer = (state = initState, action) => {
         memberSecondId: action.memberSecondId,
         logMethod: action.logMethod,
       };
-    case SIGN_UP_MODAL_SHOW:
-      return {
-        ...state,
-        signUpModalStatus: true,
-      };
 
-    case SIGN_UP_MODAL_HIDE:
+    case SIGN_UP_MODAL:
       return {
         ...state,
-        signUpModalStatus: false,
+        signUpModalStatus: action.signUpModalStatus,
       };
 
     // LogIn Modal
-    case LOGIN_MODAL_SHOW:
+    case LOGIN_MODAL:
       return {
         ...state,
-        loginModalStatus: true,
+        loginModalStatus: action.loginModalStatus,
       };
 
-    case LOGIN_MODAL_HIDE:
+    case LOGIN_INPUT_CHANGE:
       return {
         ...state,
-        loginModalStatus: false,
+        account: action.account ?? state.account,
+        password: action.password ?? state.password,
       };
 
     // Log Status
@@ -213,6 +212,7 @@ const reducer = (state = initState, action) => {
         memberName: action.memberName,
         memberId: action.memberId,
         memberEmail: action.memberEmail,
+        memberEnable: action.memberEnable,
         logMethod: action.logMethod,
       };
 
@@ -224,7 +224,15 @@ const reducer = (state = initState, action) => {
         memberName: null,
         memberId: null,
         memberEmail: null,
+        memberSecondId: null,
       };
+
+      // verify Email Timer
+      case VERIFY_EMAIL_TIMER:
+        return{
+          ...state,
+          verifyEmailTimer:action.time
+        }
 
     default:
       return state;
