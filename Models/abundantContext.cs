@@ -185,9 +185,11 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<VerifyMail>(entity =>
             {
                 entity.HasKey(e => e.ListNumber)
-                    .HasName("PK__VerifyMa__9F10CBDC2F8DE7A5");
+                    .HasName("PK__VerifyMa__9F10CBDC166D3B11");
 
                 entity.ToTable("VerifyMail");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.EnableTime).HasColumnType("datetime");
 

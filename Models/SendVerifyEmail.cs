@@ -23,7 +23,8 @@ namespace react_abundant_azure.Models
             {
                 VerifyString = auth,
                 EnableTime = LimitTime,
-                MemberId = memberId
+                MemberId = memberId,
+                CreateDate=DateTime.Now
             });
 
             _context.SaveChanges();
