@@ -10,6 +10,7 @@ namespace react_abundant_azure.Models
         public Member()
         {
             MemberOrders = new HashSet<MemberOrder>();
+            VerifyMails = new HashSet<VerifyMail>();
         }
 
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace react_abundant_azure.Models
         public DateTime? ModifyDate { get; set; }
 
         public virtual ICollection<MemberOrder> MemberOrders { get; set; }
+        public virtual ICollection<VerifyMail> VerifyMails { get; set; }
     }
 }

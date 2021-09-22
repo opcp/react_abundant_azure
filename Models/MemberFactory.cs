@@ -9,7 +9,7 @@ namespace react_abundant_azure.Models
 {
     public class MemberFactory
     {
-        public class CsingUpData
+        public class SignUpData
         {
             public string Username { get; set; }
             public string Password { get; set; }

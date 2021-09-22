@@ -15,6 +15,7 @@ namespace react_abundant_azure.Models
         public int RoomId { get; set; }
         public string RoomName { get; set; }
         public int? RoomPeopleLimit { get; set; }
+        public decimal? RoomPrice { get; set; }
 
         public virtual ICollection<Room> Rooms { get; set; }
     }
