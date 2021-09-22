@@ -31,9 +31,9 @@ namespace react_abundant_azure
                 configuration.RootPath = "ClientApp/build";
             });
 
-            // services.AddDbContext<abundantContext>();
+            //services.AddDbContext<abundantContext>(options => options.UseSqlServer(Configuration.GetConnectionString("abundantDatabase")));
 
-            services.AddDbContext<abundantContext>(options => options.UseSqlServer(Configuration.GetConnectionString("abundantDatabase")));
+            services.AddDbContext<AbundantContext>(options => options.UseSqlServer(Configuration.GetConnectionString("azure_abundantDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

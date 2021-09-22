@@ -16,9 +16,9 @@ namespace react_abundant_azure.Controllers
     [ApiController]
     public class RoomController : ControllerBase
     {
-        private readonly abundantContext _context;
+        private readonly AbundantContext _context;
 
-        public RoomController(abundantContext context)
+        public RoomController(AbundantContext context)
         {
             _context = context;
         }

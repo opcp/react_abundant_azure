@@ -10,7 +10,7 @@ namespace react_abundant_azure.Models
 {
     public class SendVerifyEmail
     {
-        private readonly abundantContext _context = new abundantContext();
+        private readonly AbundantContext _context = new AbundantContext();
         private readonly string auth = Guid.NewGuid().ToString();
 
         public void Authorization(int memberId)

@@ -13,9 +13,9 @@ namespace react_abundant_azure.Controllers
     [ApiController]
     public class VerifyController : ControllerBase
     {
-        private readonly abundantContext _context;
+        private readonly AbundantContext _context;
 
-        public VerifyController(abundantContext context)
+        public VerifyController(AbundantContext context)
         {
             _context = context;
         }

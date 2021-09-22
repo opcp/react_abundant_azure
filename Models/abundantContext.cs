@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace react_abundant_azure.Models
 {
-    public partial class abundantContext : DbContext
+    public partial class AbundantContext : DbContext
     {
-        public abundantContext()
+        public AbundantContext()
         {
         }
 
-        public abundantContext(DbContextOptions<abundantContext> options)
+        public AbundantContext(DbContextOptions<AbundantContext> options)
             : base(options)
         {
         }
@@ -30,13 +30,13 @@ namespace react_abundant_azure.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=abundant;Integrated Security=True;");
+                optionsBuilder.UseSqlServer("Server=tcp:abundant.database.windows.net,1433;Initial Catalog=Abundant;Persist Security Info=False;User ID=AbundantAdmin;Password=~Qwer1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.Entity<Member>(entity =>
             {
@@ -90,7 +90,7 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<MemberOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__MemberOr__C3905BAFD1DB974E");
+                    .HasName("PK__MemberOr__C3905BAFAD8F1C61");
 
                 entity.ToTable("MemberOrder");
 
@@ -124,7 +124,7 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<MemberOrderDetail>(entity =>
             {
                 entity.HasKey(e => e.DetailId)
-                    .HasName("PK__MemberOr__135C316D3733FE0B");
+                    .HasName("PK__MemberOr__135C316D3276772D");
 
                 entity.ToTable("MemberOrderDetail");
 
@@ -144,7 +144,7 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<Room>(entity =>
             {
                 entity.HasKey(e => new { e.RoomDate, e.RoomType })
-                    .HasName("PK__Room__8DB1429F8A677638");
+                    .HasName("PK__Room__8DB1429F35B68318");
 
                 entity.ToTable("Room");
 
@@ -173,7 +173,7 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<RoomType>(entity =>
             {
                 entity.HasKey(e => e.RoomId)
-                    .HasName("PK__RoomType__328639391C9F90DC");
+                    .HasName("PK__RoomType__32863939310C3B04");
 
                 entity.ToTable("RoomType");
 
@@ -185,7 +185,7 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<VerifyMail>(entity =>
             {
                 entity.HasKey(e => e.ListNumber)
-                    .HasName("PK__VerifyMa__9F10CBDC166D3B11");
+                    .HasName("PK__VerifyMa__9F10CBDC11C7D5E8");
 
                 entity.ToTable("VerifyMail");
 

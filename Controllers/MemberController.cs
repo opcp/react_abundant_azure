@@ -20,9 +20,9 @@ namespace react_abundant_azure.Controllers
     [ApiController]
     public class MemberController : ControllerBase
     {
-        private readonly abundantContext _context;
+        private readonly AbundantContext _context;
 
-        public MemberController(abundantContext context)
+        public MemberController(AbundantContext context)
         {
             _context = context;
         }
