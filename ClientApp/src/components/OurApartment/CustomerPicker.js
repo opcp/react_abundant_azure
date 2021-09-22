@@ -3,35 +3,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
-function CustomerPicker(props) {
-  const {man,child} = useSelector(state => state);
+function CustomerPicker() {
+  const { man, child } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const man_up = () => {
+  const man_dispatch = (event) => {
     dispatch({
-      type: "MAN_UP"
+      type: "MAN",
+      man: event,
     });
   };
 
-  const man_down = () => {
-    if (man >= 2) {
-      dispatch({
-        type: "MAN_DOWN"
-      });
-    }
-  };
-
-  const child_up = () => {
+  const child_dispatch = (event) => {
     dispatch({
-      type: "CHILD_UP"
+      type: "CHILD",
+      child:event
     });
-  };
-
-  const child_down = () => {
-    if (child >= 1) {
-      dispatch({
-        type: "CHILD_DOWN"
-      });
-    }
   };
 
   return (
@@ -41,10 +27,20 @@ function CustomerPicker(props) {
         <span>Adults</span>
         <div className="sort">
           <button>
-            <FontAwesomeIcon onClick={man_up} icon={faSortUp} />
+            <FontAwesomeIcon
+              onClick={() => man_dispatch("UP")}
+              icon={faSortUp}
+            />
           </button>
           <button>
-            <FontAwesomeIcon onClick={man_down} icon={faSortDown} />
+            <FontAwesomeIcon
+              onClick={() => {
+                if (man > 1) {
+                  man_dispatch("DOWN");
+                }
+              }}
+              icon={faSortDown}
+            />
           </button>
         </div>
       </div>
@@ -53,10 +49,20 @@ function CustomerPicker(props) {
         <span>Kids</span>
         <div className="sort">
           <button>
-            <FontAwesomeIcon onClick={child_up} icon={faSortUp} />
+            <FontAwesomeIcon
+              onClick={() => child_dispatch("UP")}
+              icon={faSortUp}
+            />
           </button>
           <button>
-            <FontAwesomeIcon onClick={child_down} icon={faSortDown} />
+            <FontAwesomeIcon
+              onClick={() => {
+                if (child > 0) {
+                  child_dispatch("DOWN");
+                }
+              }}
+              icon={faSortDown}
+            />
           </button>
         </div>
       </div>
