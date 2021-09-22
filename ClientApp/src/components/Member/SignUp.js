@@ -6,12 +6,12 @@ import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
 function SignUp(props) {
-  const { memberName, memberEmail, memberSecondId } = useSelector(
+  const { memberName, memberEmail, memberSecondId, emailCheck } = useSelector(
     (state) => state
   );
   const dispatch = useDispatch();
 
-  const schema = yup.object().shape({
+  const schema = yup.object({
     username: yup.string().required(),
     email: yup.string().email().required(),
     password: yup
@@ -24,7 +24,7 @@ function SignUp(props) {
           `one lowercase characters (a-z) ,` +
           `one Digits (0-9) ,` +
           `one Special characters`,
-        test: function isValid(val) {
+        test: (val) => {
           let reg = /^(?=^.{8,}$)((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.*$/;
           if (reg.test(val)) {
             return true;
@@ -51,6 +51,31 @@ function SignUp(props) {
     terms: false,
   };
 
+  const emailCheckfunc = async (email) => {
+    return await fetch("/api/member/emailCheck", {
+      method: "Post",
+      body: JSON.stringify(email),
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.state === "emailUsed") {
+          dispatch({
+            type: "EMAIL_CHECK",
+            emailCheck: false,
+          });
+          return false;
+        }else{
+          dispatch({
+            type: "EMAIL_CHECK",
+            emailCheck: true,
+          });
+          return true
+        }
+      });
+  };
   return (
     <Modal
       {...props}
@@ -66,6 +91,11 @@ function SignUp(props) {
         validationSchema={schema}
         enableReinitialize
         onSubmit={async (values) => {
+          let check = await emailCheckfunc(values.email);
+          if (!check) {
+            return;
+          }
+
           if (memberSecondId !== null) {
             values = Object.assign(memberSecondId, values);
           }
@@ -144,9 +174,15 @@ function SignUp(props) {
                   value={values.email}
                   onChange={handleChange}
                   isInvalid={errors.email}
+                  className={emailCheck ? "" : "is-invalid"}
                 />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email}
+                <Form.Control.Feedback
+                  className={emailCheck ? "" : "d-block"}
+                  type="invalid"
+                >
+                  {emailCheck
+                    ? errors.email
+                    : "That email is taken, Try other."}
                 </Form.Control.Feedback>
               </Form.Group>
             </Row>

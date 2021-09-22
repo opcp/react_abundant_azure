@@ -18,6 +18,7 @@ const SUPERIOR_ROOM_ORDER_NUMBER = "SUPERIOR_ROOM_ORDER_NUMBER";
 const PER_ROOM_MAX = "PER_ROOM_MAX";
 const CHECK_ORDER_DELETE = "CHECK_ORDER_DELETE";
 const VERIFY_EMAIL_TIMER = "VERIFY_EMAIL_TIMER";
+const EMAIL_CHECK = "EMAIL_CHECK";
 
 const initState = {
   man: 1,
@@ -43,7 +44,8 @@ const initState = {
   memberEnable: null,
   memberOrder: null,
   memberSecondId: null,
-  verifyEmailTimer:null,
+  verifyEmailTimer: null,
+  emailCheck: true,
   startDate: null,
   endDate: null,
   memberCheck: async (useWeb, userData) => {
@@ -227,12 +229,18 @@ const reducer = (state = initState, action) => {
         memberSecondId: null,
       };
 
-      // verify Email Timer
-      case VERIFY_EMAIL_TIMER:
-        return{
-          ...state,
-          verifyEmailTimer:action.time
-        }
+    // verify Email Timer
+    case VERIFY_EMAIL_TIMER:
+      return {
+        ...state,
+        verifyEmailTimer: action.time,
+      };
+
+    case EMAIL_CHECK:
+      return {
+        ...state,
+        emailCheck: action.emailCheck,
+      };
 
     default:
       return state;

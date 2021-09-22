@@ -26,6 +26,20 @@ namespace react_abundant_azure.Controllers
         {
             _context = context;
         }
+        // POST api/Member/emailCheck
+        [HttpPost("emailCheck")]
+        public IActionResult emailCheck([FromBody] string email)
+        {
+            var q = _context.Members.Where((i) => i.Email == email).FirstOrDefault();
+            if (q != null)
+            {
+                return Ok(JsonConvert.SerializeObject(new State() { state = "emailUsed" }));
+            }
+            else
+            {
+                return Ok(JsonConvert.SerializeObject(new State() { state = "emailNotUsed" }));
+            }
+        }
 
         // POST api/Member/MemberLogIn
         [HttpPost("MemberLogIn")]
