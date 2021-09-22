@@ -19,9 +19,11 @@ namespace react_abundant_azure.Models
 
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MemberOrder> MemberOrders { get; set; }
+        public virtual DbSet<MemberOrderDetail> MemberOrderDetails { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomCouldOrderDate> RoomCouldOrderDates { get; set; }
         public virtual DbSet<RoomType> RoomTypes { get; set; }
+        public virtual DbSet<VerifyMail> VerifyMails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -88,15 +90,20 @@ namespace react_abundant_azure.Models
             modelBuilder.Entity<MemberOrder>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__MemberOr__C3905BAF58C75E0F");
+                    .HasName("PK__MemberOr__C3905BAFD1DB974E");
 
                 entity.ToTable("MemberOrder");
 
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+                entity.Property(e => e.OrderId)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("OrderID");
 
                 entity.Property(e => e.CheckInDate).HasColumnType("date");
 
                 entity.Property(e => e.CheckOutDate).HasColumnType("date");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
@@ -107,18 +114,31 @@ namespace react_abundant_azure.Models
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
-                entity.Property(e => e.OrderDate).HasColumnType("datetime");
-
-                entity.Property(e => e.OrderRoomTotal)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.MemberOrders)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MemberID");
+            });
+
+            modelBuilder.Entity<MemberOrderDetail>(entity =>
+            {
+                entity.HasKey(e => e.DetailId)
+                    .HasName("PK__MemberOr__135C316D3733FE0B");
+
+                entity.ToTable("MemberOrderDetail");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ModiftDate).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderDate).HasColumnType("date");
+
+                entity.Property(e => e.OrderId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("OrderID");
             });
 
             modelBuilder.Entity<Room>(entity =>
@@ -158,6 +178,29 @@ namespace react_abundant_azure.Models
                 entity.ToTable("RoomType");
 
                 entity.Property(e => e.RoomName).HasMaxLength(50);
+
+                entity.Property(e => e.RoomPrice).HasColumnType("money");
+            });
+
+            modelBuilder.Entity<VerifyMail>(entity =>
+            {
+                entity.HasKey(e => e.ListNumber)
+                    .HasName("PK__VerifyMa__9F10CBDC2F8DE7A5");
+
+                entity.ToTable("VerifyMail");
+
+                entity.Property(e => e.EnableTime).HasColumnType("datetime");
+
+                entity.Property(e => e.VerifyString)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.VerifyMails)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VerifyMemberId");
             });
 
             OnModelCreatingPartial(modelBuilder);
