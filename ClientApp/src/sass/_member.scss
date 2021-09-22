@@ -33,3 +33,29 @@ $fz: 25px;
     }
   }
 }
+
+.member_order{
+  padding: 0 10px;
+  border: 1px solid rgba(76, 76, 76, 0.3);
+  border-radius: 10px;
+
+  .list{
+    padding-top: 2%;
+    width: 70%;
+    span{
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+    .room{
+     margin-top: 20px;
+    }
+  }
+  
+  .price{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+  }
+}
