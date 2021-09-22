@@ -1,7 +1,7 @@
 ## Abundant 
 
 前端 react + redux + sass
-後端 C# + azure sql
+後端 C# MVC + azure sql
 
 有串接FB及Line 第三方登入
 也可以使用一般流程註冊  
