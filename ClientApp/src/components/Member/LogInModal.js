@@ -8,7 +8,7 @@ function LogInModal(props) {
   const { memberCheck, eventAlert, account, password, memberEnable } =
     useSelector((state) => state);
   const client_id = "1656389623";
-  const redirect_uri = "https://localhost:5001/";
+  const redirect_uri = "https://abundant.azurewebsites.net/";
   const state = "q1w2e3r4t5";
   const url = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}&scope=profile%20openid%20email&nonce=09876xyz`;
 

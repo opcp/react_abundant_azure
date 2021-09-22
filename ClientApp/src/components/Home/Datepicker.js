@@ -11,8 +11,8 @@ export default class Example extends React.Component {
     this.handleFromChange = this.handleFromChange.bind(this);
     this.handleToChange = this.handleToChange.bind(this);
     this.state = {
-      from: this.props.data.sDate ?? null,
-      to: this.props.data.eDate ?? null,
+      from: this.props.data.startDate ?? null,
+      to: this.props.data.endDate ?? null,
     };
   }
 

@@ -33,7 +33,7 @@ function Header() {
   // Line 登入要用到的常數
   const client_id = "1656389623";
   const client_secret = "99f89b0abdb898b5c3b710a67c6ddbe4";
-  const redirect_uri = "https://localhost:5001/";
+  const redirect_uri = "https://abundant.azurewebsites.net/";
 
   // Line登入用函數
 

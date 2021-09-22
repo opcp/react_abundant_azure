@@ -4,6 +4,7 @@ import CustomerPicker from "./CustomerPicker";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Overlay } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 function SearchRoom() {
   const his = useHistory();
@@ -57,6 +58,8 @@ function SearchRoom() {
           });
 
           return { standard, junior, superior };
+        } else {
+          return false;
         }
       })
       .catch((err) => console.log(err));
@@ -76,14 +79,21 @@ function SearchRoom() {
 
       let res = await roomSearch();
 
-      dispatch({
-        type: "PER_ROOM_MAX",
-        standardRoomMax: res.standard,
-        juniorSuiteMax: res.junior,
-        superiorRoomMax: res.superior,
-      });
+      if (res) {
+        dispatch({
+          type: "PER_ROOM_MAX",
+          standardRoomMax: res.standard,
+          juniorSuiteMax: res.junior,
+          superiorRoomMax: res.superior,
+        });
 
-      his.push("/OurApartment");
+        his.push("/OurApartment");
+      } else {
+        Swal.fire({
+          title: 'Oops...',
+          text: 'There are no rooms in this range',
+        })
+      }
     } else {
       setShow(true);
     }
