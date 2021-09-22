@@ -3,17 +3,12 @@ import DatePicker from "../Home/Datepicker";
 import CustomerPicker from "./CustomerPicker";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Tooltip, Overlay, Button } from "react-bootstrap";
+import { Overlay } from "react-bootstrap";
 
 function SearchRoom() {
   const his = useHistory();
   const dispatch = useDispatch();
-  const sDate = useSelector((state) => state.startDate);
-  const eDate = useSelector((state) => state.endDate);
-  // const { standardRoomMax, juniorSuiteMax, superiorRoomMax } = useSelector(
-  //   (state) => state
-  // );
-
+  const { startDate, endDate } = useSelector((state) => state);
   const [show, setShow] = useState(false);
   const target = useRef(null);
 
@@ -34,7 +29,7 @@ function SearchRoom() {
   const roomSearch = async () => {
     return await fetch("/api/Room/Check", {
       method: "POST",
-      body: JSON.stringify({ startDate: sDate, endDate: eDate }),
+      body: JSON.stringify({ startDate, endDate }),
       headers: new Headers({
         "Content-Type": "application/json",
       }),
@@ -67,16 +62,16 @@ function SearchRoom() {
       .catch((err) => console.log(err));
   };
 
-
   // redux 有值就給
 
   // 找日期內空房
   const searchRoom = async () => {
-    if (sDate && eDate) {
+    if (startDate && endDate) {
+      setShow(false);
       dispatch({
         type: "ROOM_ORDER_DATE",
-        startDate: sDate,
-        endDate: eDate,
+        startDate,
+        endDate,
       });
 
       let res = await roomSearch();
@@ -90,15 +85,15 @@ function SearchRoom() {
 
       his.push("/OurApartment");
     } else {
-      setShow(!show)
+      setShow(true);
     }
   };
 
   return (
     <>
-      <DatePicker data={{ sDate, eDate, DateUpdate }} />
+      <DatePicker data={{ startDate, endDate, DateUpdate }} />
       <CustomerPicker />
-      <button onClick={searchRoom} ref={target}  className="search_booking">
+      <button onClick={searchRoom} ref={target} className="search_booking">
         search
       </button>
 
@@ -114,7 +109,7 @@ function SearchRoom() {
               ...props.style,
             }}
           >
-           Please select check in and check out date
+            Please select check in and check out date
           </div>
         )}
       </Overlay>

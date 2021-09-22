@@ -280,11 +280,12 @@ function OurApartment() {
             <Row className="room_row">
               <Col className="room_col">
                 <Button
-                  onClick={() =>
+                  onClick={() => {
                     dispatch({
-                      type: "CHECK_ORDER_MODAL_SHOW",
-                    })
-                  }
+                      type: "RESERVE_ORDER_MODAL",
+                      reserveOrderModalStatus: true,
+                    });
+                  }}
                   className="shadow-none"
                   variant="secondary"
                   size="lg"
